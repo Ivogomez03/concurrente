@@ -1,0 +1,27 @@
+package ejercicio5;
+
+class Hilo1 implements Runnable {
+    private Ejercicio5 ejercicio5;
+
+    public Hilo1(Ejercicio5 ejercicio5) {
+        this.ejercicio5 = ejercicio5;
+    }
+
+    @Override
+    public void run() {
+        int i = 0;
+        do {
+            if (ejercicio5.obtenerContador() == 1)
+                ejercicio5.downSemaforo(1);
+
+            System.out.print("A");
+
+            ejercicio5.aumentarContador();
+
+            ejercicio5.upSemaforo(2);
+            i++;
+        } while (i < 5);
+
+    }
+
+}
