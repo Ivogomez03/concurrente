@@ -1,6 +1,6 @@
 package ejercicio2;
 
-class Hilo2 implements Runnable{
+class Hilo2 implements Runnable {
 
     private Ejercicio2 ejercicio2;
 
@@ -9,17 +9,16 @@ class Hilo2 implements Runnable{
     }
 
     @Override
-    public void run(){
+    public void run() {
         // A se imprime siempre primero
         System.out.print("A");
-        ejercicio2.obtenerSemaforo(2).release();
-        ejercicio2.obtenerSemaforo(1).acquireUninterruptibly();
+        ejercicio2.upSemaforo(2);
+        ejercicio2.downSemaforo(1);
 
-      
         System.out.print("R");
         // O se imprime siempre ultima
 
-        ejercicio2.obtenerSemaforo(3).acquireUninterruptibly();
+        ejercicio2.downSemaforo(3);
         System.out.print("O");
     }
 }

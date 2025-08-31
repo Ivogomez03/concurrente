@@ -1,6 +1,6 @@
 package ejercicio3;
 
-class Hilo3 implements Runnable{
+class Hilo3 implements Runnable {
 
     private Ejercicio3 ejercicio3;
 
@@ -9,12 +9,12 @@ class Hilo3 implements Runnable{
     }
 
     @Override
-    public void run(){
-        ejercicio3.obtenerSemaforo(3).acquireUninterruptibly();
+    public void run() {
+        ejercicio3.downSemaforo(3);
         System.out.print("O ");
-        ejercicio3.obtenerSemaforo(1).release();
-        ejercicio3.obtenerSemaforo(2).release();
+        ejercicio3.upSemaforo(1);
+        ejercicio3.upSemaforo(2);
         System.out.print("OK ");
-    
+
     }
 }

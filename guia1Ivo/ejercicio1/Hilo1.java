@@ -1,7 +1,6 @@
 package ejercicio1;
 
-
-class Hilo1 implements Runnable{
+class Hilo1 implements Runnable {
     private Ejercicio1 ejercicio1;
 
     public Hilo1(Ejercicio1 ejercicio1) {
@@ -9,14 +8,13 @@ class Hilo1 implements Runnable{
     }
 
     @Override
-    public void run(){
+    public void run() {
         // A se imprime antes de F
         System.out.println("A");
-        ejercicio1.obtenerSemaforo(2).release();
+        ejercicio1.upSemaforo(2);
         System.out.println("B");
-        ejercicio1.obtenerSemaforo(1).acquireUninterruptibly();
-        
-        
+        ejercicio1.downSemaforo(1);
+
         System.out.println("C");
     }
 }

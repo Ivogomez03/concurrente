@@ -1,24 +1,22 @@
 package ejercicio2;
 
-class Hilo1 implements Runnable{
+class Hilo1 implements Runnable {
     private Ejercicio2 ejercicio2;
 
     public Hilo1(Ejercicio2 ejercicio2) {
         this.ejercicio2 = ejercicio2;
     }
 
-    
-
     @Override
-    public void run(){
+    public void run() {
         // C se imprime siempre segunda
-        ejercicio2.obtenerSemaforo(2).acquireUninterruptibly();
+        ejercicio2.downSemaforo(2);
         System.out.print("C");
-        
-        ejercicio2.obtenerSemaforo(1).release();
-       
+
+        ejercicio2.upSemaforo(1);
+
         System.out.print("E");
-        ejercicio2.obtenerSemaforo(3).release();
+        ejercicio2.upSemaforo(3);
     }
-        
+
 }
