@@ -15,18 +15,19 @@ en 1.
 b) Modificar la solución para que la única salida posible sea ABABABABAB...
 
 *********************************************************************/
-package ejercicio5;
+package ejercicio6;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
 
-class Ejercicio5 {
+class Ejercicio6 {
 
     private Map<Integer, Semaphore> semaforos = new HashMap<>();
-    private int contador = 0;
+    private int N2 = 0;
+    private int N = 50;
 
-    public Ejercicio5() {
+    public Ejercicio6() {
         for (int i = 1; i < 3; i++) {
             semaforos.put(i, new Semaphore(0));
         }
@@ -34,10 +35,10 @@ class Ejercicio5 {
 
     public static void main(String[] argumentos) {
 
-        Ejercicio5 ej5 = new Ejercicio5();
+        Ejercicio6 ej6 = new Ejercicio6();
 
-        new Thread(new Hilo1(ej5), "Hilo1").start();
-        new Thread(new Hilo2(ej5), "Hilo2").start();
+        new Thread(new Hilo1(ej6), "Hilo1").start();
+        new Thread(new Hilo2(ej6), "Hilo2").start();
     }
 
     private Semaphore obtenerSemaforo(int numeroDeSemaforo) {
@@ -55,21 +56,22 @@ class Ejercicio5 {
         obtenerSemaforo(numeroDeSemaforo).acquireUninterruptibly();
     }
 
-    public int obtenerContador() {
-        return this.contador;
+    public void disminuirN() {
+        this.N--;
     }
 
-    public void aumentarContador() {
-        ++this.contador;
+    public int obtenerN() {
+        return this.N;
     }
 
-    public void restablecerContador() {
-        this.contador = 0;
+    public int obtenerN2() {
+        return this.N2;
     }
 
-    public void disminuirContador() {
-        --this.contador;
+    public void sumarEnesimoImpar_N2() {
+        this.N2 += this.N * 2 - 1;
     }
+
 }
 
 /*

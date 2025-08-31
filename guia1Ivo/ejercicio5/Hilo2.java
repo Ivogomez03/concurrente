@@ -12,15 +12,16 @@ class Hilo2 implements Runnable {
     public void run() {
         int i = 0;
         do {
-            if (ejercicio5.obtenerContador() == -1)
+            if (ejercicio5.obtenerContador() == -1) {
+                ejercicio5.upSemaforo(1);
+                ejercicio5.restablecerContador();
                 ejercicio5.downSemaforo(2);
-
+            }
             System.out.print("B");
 
             ejercicio5.disminuirContador();
 
-            ejercicio5.upSemaforo(1);
             i++;
-        } while (i < 5);
+        } while (i < 2);
     }
 }
