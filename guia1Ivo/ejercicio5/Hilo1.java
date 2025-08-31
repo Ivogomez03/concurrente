@@ -9,21 +9,28 @@ class Hilo1 implements Runnable {
 
     @Override
     public void run() {
-        int i = 0;
+        /*
+         * Consigna A
+         * do {
+         * if (ejercicio5.obtenerContador() == 1) {
+         * ejercicio5.upSemaforo(2);
+         * ejercicio5.restablecerContador();
+         * ejercicio5.downSemaforo(1);
+         * }
+         * 
+         * System.out.print("A");
+         * 
+         * ejercicio5.aumentarContador();
+         * 
+         * } while (true);
+         */
         do {
-            if (ejercicio5.obtenerContador() == 1) {
-                ejercicio5.upSemaforo(2);
-                ejercicio5.restablecerContador();
-                ejercicio5.downSemaforo(1);
-            }
 
             System.out.print("A");
+            ejercicio5.upSemaforo(2);
+            ejercicio5.downSemaforo(1);
 
-            ejercicio5.aumentarContador();
-
-            i++;
-        } while (i < 2);
-
+        } while (true);
     }
 
 }
