@@ -9,11 +9,12 @@ class Hilo1 implements Runnable {
 
     @Override
     public void run() {
-
+        // me tiene que dar 2500
         while (ejercicio6.obtenerN() > 0) {
+            ejercicio6.upSemaforo(2);
             ejercicio6.downSemaforo(1);
             ejercicio6.disminuirN();
-            ejercicio6.upSemaforo(2);
+
         }
         System.out.println(ejercicio6.obtenerN2());
     }

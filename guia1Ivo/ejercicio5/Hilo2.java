@@ -11,24 +11,20 @@ class Hilo2 implements Runnable {
     @Override
     public void run() {
         // Consigna A
-        /*
-         * do {
-         * if (ejercicio5.obtenerContador() == -1) {
-         * ejercicio5.upSemaforo(1);
-         * ejercicio5.restablecerContador();
-         * ejercicio5.downSemaforo(2);
-         * }
-         * System.out.print("B");
-         * 
-         * ejercicio5.disminuirContador();
-         * 
-         * } while (true);
-         */
 
         do {
             ejercicio5.downSemaforo(2);
+
             System.out.print("B");
+
             ejercicio5.upSemaforo(1);
         } while (true);
+
+        // Consigna B
+        // do {
+        // ejercicio5.downSemaforo(2);
+        // System.out.print("B");
+        // ejercicio5.upSemaforo(1);
+        // } while (true);
     }
 }

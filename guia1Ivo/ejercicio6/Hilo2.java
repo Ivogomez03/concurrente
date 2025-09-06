@@ -11,10 +11,11 @@ class Hilo2 implements Runnable {
     public void run() {
 
         while (true) {
+            ejercicio6.downSemaforo(2);
             ejercicio6.sumarEnesimoImpar_N2();
 
             ejercicio6.upSemaforo(1);
-            ejercicio6.downSemaforo(2);
+
         }
 
     }

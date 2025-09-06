@@ -24,12 +24,13 @@ import java.util.concurrent.Semaphore;
 class Ejercicio5 {
 
     private Map<Integer, Semaphore> semaforos = new HashMap<>();
-    private int contador = 0;
+    // private int contador = 0;
 
     public Ejercicio5() {
-        for (int i = 1; i < 3; i++) {
-            semaforos.put(i, new Semaphore(0));
-        }
+
+        semaforos.put(1, new Semaphore(1));
+        semaforos.put(2, new Semaphore(1));
+
     }
 
     public static void main(String[] argumentos) {
@@ -54,22 +55,23 @@ class Ejercicio5 {
     public void downSemaforo(int numeroDeSemaforo) {
         obtenerSemaforo(numeroDeSemaforo).acquireUninterruptibly();
     }
-
-    public int obtenerContador() {
-        return this.contador;
-    }
-
-    public void aumentarContador() {
-        ++this.contador;
-    }
-
-    public void restablecerContador() {
-        this.contador = 0;
-    }
-
-    public void disminuirContador() {
-        --this.contador;
-    }
+    /*
+     * public int obtenerContador() {
+     * return this.contador;
+     * }
+     * 
+     * public void aumentarContador() {
+     * ++this.contador;
+     * }
+     * 
+     * public void restablecerContador() {
+     * this.contador = 0;
+     * }
+     * 
+     * public void disminuirContador() {
+     * --this.contador;
+     * }
+     */
 }
 
 /*

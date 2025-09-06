@@ -3,16 +3,18 @@
 @author: Ivogomez03
 github: https://www.github.com/Ivogomez03
 
-Ejercicio 5
+6. Los siguientes procesos cooperan para calcular el valor N2 que es la suma de los primero N números
+impares. Los procesos comparten las variables N y N2 inicializadas de la siguiente manera: N = 50 y
+N2 = 0.
+P1 :                    P2
+while (N > 0) do        while (true) do
+N = N-1                 N2 = N2 + 2*N-1
+end while               end while
+mostrar (N2)
 
-Considere los siguientes dos procesos
 
-T_1 = while true do print(A)
-T_2 = while true do print(B)
-
-a) Utilizar semáforos para garantizar que en todo momento la cantidad de A y B difiera al máximo
-en 1.
-b) Modificar la solución para que la única salida posible sea ABABABABAB...
+a) Dar una solución que utilizando semáforos garantice que se muestra el valor correcto de N2.
+b) Qué debería cambiar en la solución propuesta en a) si N2 se calcula como N2+2*N+1.
 
 *********************************************************************/
 package ejercicio6;
