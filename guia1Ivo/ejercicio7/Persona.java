@@ -2,11 +2,10 @@ package ejercicio7;
 
 class Persona implements Runnable {
     private final Ejercicio7 ejercicio7;
-    private Integer id;
 
-    public Persona(Ejercicio7 ejercicio7, Integer id) {
+    public Persona(Ejercicio7 ejercicio7) {
         this.ejercicio7 = ejercicio7;
-        this.id = id;
+
     }
 
     @Override

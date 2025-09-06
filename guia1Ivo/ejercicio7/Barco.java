@@ -10,8 +10,6 @@ package ejercicio7;
 */
 class Barco implements Runnable {
     private final Ejercicio7 ejercicio7;
-    private boolean bajaron = true;
-    private boolean subieron = false;
 
     public Barco(Ejercicio7 ejercicio7) {
         this.ejercicio7 = ejercicio7;

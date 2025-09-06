@@ -43,7 +43,7 @@ class Ejercicio7 {
         new Thread(new Barco(ej7), "Barco").start();
 
         for (Integer i = 0; i <= ej7.obtenerN(); i++) {
-            new Thread(new Persona(ej7, i), "Persona").start();
+            new Thread(new Persona(ej7), "Persona").start();
         }
 
     }
