@@ -14,6 +14,7 @@ class Persona implements Runnable {
             ejercicio7.downSemaforo("Subir");
             ejercicio7.upSemaforo("Barco");
             ejercicio7.downSemaforo("Bajar");
+            ejercicio7.upSemaforo("Barco");
         }
 
     }
