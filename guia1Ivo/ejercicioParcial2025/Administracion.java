@@ -133,13 +133,12 @@ public class Administracion {
 
                     // levanto para que pasen a la admin y yo me voy a pasar a realizar
                     // verificacion
-                    estaciones.get(vehiculo.getEstacion()).realizarVerificacion(vehiculo);
+
                 } else {
                     cantidadEstatales--;
                     esperarParticular.signalAll();
                     // levanto para que pasen a la admin y yo me voy a pasar a realizar
                     // verificacion
-                    estaciones.get(vehiculo.getEstacion()).realizarVerificacion(vehiculo);
 
                 }
 
@@ -195,17 +194,13 @@ public class Administracion {
 
                     // levanto uno para que pase a la admin y yo me voy a pasar a realizar
                     // verificacion
-                    estaciones.get(vehiculo.getEstacion()).realizarVerificacion(vehiculo);
                 } else {
                     cantidadParticulares--;
                     esperarParticular.signalAll();
                     // levanto uno para que pase a la admin y yo me voy a pasar a realizar
                     // verificacion
 
-                    estaciones.get(vehiculo.getEstacion()).realizarVerificacion(vehiculo);
-
                 }
-
             }
 
         } finally {
