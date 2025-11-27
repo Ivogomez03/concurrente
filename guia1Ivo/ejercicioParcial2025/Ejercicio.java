@@ -11,7 +11,7 @@ public class Ejercicio {
                 e.printStackTrace();
             }
 
-            new Thread(new Vehiculo(tipoRandom(), i + 1, admin), "Monkey").start();
+            new Thread(new Vehiculo(tipoRandom(), i + 1, admin), "Vehiculo").start();
 
         }
     }
