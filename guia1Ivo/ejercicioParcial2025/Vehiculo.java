@@ -1,3 +1,4 @@
+
 public class Vehiculo implements Runnable {
     private int tipoDeVehiculo; // 0 para estatal, 1 para particular.
     private int id;
@@ -11,15 +12,18 @@ public class Vehiculo implements Runnable {
         this.administracion = administracion;
     }
 
+    public void irAdministracion() {
+        administracion.pushearVehiculo(this);
+    }
+
+    public void irEstacionAsignada() {
+        estacionObjeto.pushearVehiculo(this);
+    }
+
     @Override
     public void run() {
-        try {
-            administracion.tomarInfoyAsignarEstacion(this);
-            estacionObjeto.realizarVerificacion(this);
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        irAdministracion();
+        irEstacionAsignada();
 
     }
 
@@ -42,4 +46,5 @@ public class Vehiculo implements Runnable {
     public int getEstacion() {
         return this.estacion;
     }
+
 }

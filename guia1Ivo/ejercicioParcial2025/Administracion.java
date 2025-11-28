@@ -28,18 +28,22 @@ número de vehículos verificados, suponiendo que cada vehículo consume el mism
 */
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class Administracion {
+public class Administracion implements Runnable {
     private List<Estacion> estaciones = new ArrayList<>(3);
-    private Lock lock;
+    public Lock lock;
     private Condition esperarParticular;
     private Condition esperarEstatal;
     private int cantidadEstatales;
     private int cantidadParticulares;
+
+    private Queue<Vehiculo> vehiculos;
+
     private int verificaciones;
     private int aprobadas;
 
@@ -78,133 +82,90 @@ public class Administracion {
         return this.estaciones;
     }
 
-    public void tomarInfoyAsignarEstacion(Vehiculo vehiculo) throws InterruptedException {
-        lock.lock();
-        try {
-            if (vehiculo.getTipoDeVehiculo() == 0) {
-                while (cantidadEstatales > 0)
-                    esperarEstatal.await();
+    public void pushearVehiculo(Vehiculo v) {
+        vehiculos.add(v);
 
-                cantidadEstatales++;
+    }
 
-                System.out.println("Tomando datos y asignando estacion");
+    public void asignarEstacion(Vehiculo vehiculo) {
 
-                if (estaciones.get(0).getCantidadDeVehiculos() > estaciones.get(1).getCantidadDeVehiculos()) {
-                    if (estaciones.get(2).getCantidadDeVehiculos() > estaciones.get(1).getCantidadDeVehiculos()) {
+        System.out.println("Tomando datos y asignando estacion");
 
-                        vehiculo.asignarEstacion(1);
-                        vehiculo.asignarEstacionObjeto(estaciones.get(1));
+        if (estaciones.get(0).getCantidadDeVehiculos() > estaciones.get(1).getCantidadDeVehiculos()) {
+            if (estaciones.get(2).getCantidadDeVehiculos() > estaciones.get(1).getCantidadDeVehiculos()) {
 
-                        estaciones.get(1).incrementarCantidadDeVehiculos();
+                vehiculo.asignarEstacion(1);
+                vehiculo.asignarEstacionObjeto(estaciones.get(1));
 
-                        System.out.println("Asignamos estacion 1 al vehiculo con id " + vehiculo.getId());
-                    } else {
+                System.out.println("Asignamos estacion 1 al vehiculo con id " + vehiculo.getId());
+            } else {
 
-                        vehiculo.asignarEstacion(2);
-                        vehiculo.asignarEstacionObjeto(estaciones.get(2));
+                vehiculo.asignarEstacion(2);
+                vehiculo.asignarEstacionObjeto(estaciones.get(2));
 
-                        estaciones.get(2).incrementarCantidadDeVehiculos();
-
-                        System.out.println("Asignamos estacion 2 al vehiculo con id " + vehiculo.getId());
-                    }
-                } else {
-                    if (estaciones.get(2).getCantidadDeVehiculos() > estaciones.get(0).getCantidadDeVehiculos()) {
-
-                        vehiculo.asignarEstacion(0);
-                        vehiculo.asignarEstacionObjeto(estaciones.get(0));
-
-                        estaciones.get(0).incrementarCantidadDeVehiculos();
-
-                        System.out.println("Asignamos estacion 0 al vehiculo con id " + vehiculo.getId());
-                    } else {
-
-                        vehiculo.asignarEstacion(2);
-                        vehiculo.asignarEstacionObjeto(estaciones.get(2));
-
-                        estaciones.get(2).incrementarCantidadDeVehiculos();
-
-                        System.out.println("Asignamos estacion 2 al vehiculo con id " + vehiculo.getId());
-                    }
-                }
-
-                if (cantidadEstatales > 0) {
-                    cantidadEstatales--;
-                    esperarEstatal.signalAll();
-
-                    // levanto para que pasen a la admin y yo me voy a pasar a realizar
-                    // verificacion
-
-                } else {
-                    cantidadEstatales--;
-                    esperarParticular.signalAll();
-                    // levanto para que pasen a la admin y yo me voy a pasar a realizar
-                    // verificacion
-
-                }
-
-            } else { // si es particular
-                while (cantidadEstatales > 0 || cantidadParticulares > 0)
-                    esperarParticular.await();
-
-                cantidadParticulares++;
-
-                System.out.println("Tomando datos y asignando estacion");
-
-                if (estaciones.get(0).getCantidadDeVehiculos() > estaciones.get(1).getCantidadDeVehiculos()) {
-                    if (estaciones.get(2).getCantidadDeVehiculos() > estaciones.get(1).getCantidadDeVehiculos()) {
-
-                        vehiculo.asignarEstacion(1);
-                        vehiculo.asignarEstacionObjeto(estaciones.get(1));
-
-                        estaciones.get(1).incrementarCantidadDeVehiculos();
-
-                        System.out.println("Asignamos estacion 1 al vehiculo con id " + vehiculo.getId());
-                    } else {
-
-                        vehiculo.asignarEstacion(2);
-                        vehiculo.asignarEstacionObjeto(estaciones.get(2));
-
-                        estaciones.get(2).incrementarCantidadDeVehiculos();
-
-                        System.out.println("Asignamos estacion 2 al vehiculo con id " + vehiculo.getId());
-                    }
-                } else {
-                    if (estaciones.get(2).getCantidadDeVehiculos() > estaciones.get(0).getCantidadDeVehiculos()) {
-
-                        vehiculo.asignarEstacion(0);
-                        vehiculo.asignarEstacionObjeto(estaciones.get(0));
-
-                        estaciones.get(0).incrementarCantidadDeVehiculos();
-
-                        System.out.println("Asignamos estacion 0 al vehiculo con id " + vehiculo.getId());
-                    } else {
-
-                        vehiculo.asignarEstacion(2);
-                        vehiculo.asignarEstacionObjeto(estaciones.get(2));
-
-                        estaciones.get(2).incrementarCantidadDeVehiculos();
-
-                        System.out.println("Asignamos estacion 2 al vehiculo con id " + vehiculo.getId());
-                    }
-                }
-
-                if (cantidadEstatales > 0) {
-                    cantidadParticulares--;
-                    esperarEstatal.signalAll();
-
-                    // levanto uno para que pase a la admin y yo me voy a pasar a realizar
-                    // verificacion
-                } else {
-                    cantidadParticulares--;
-                    esperarParticular.signalAll();
-                    // levanto uno para que pase a la admin y yo me voy a pasar a realizar
-                    // verificacion
-
-                }
+                System.out.println("Asignamos estacion 2 al vehiculo con id " + vehiculo.getId());
             }
+        } else {
+            if (estaciones.get(2).getCantidadDeVehiculos() > estaciones.get(0).getCantidadDeVehiculos()) {
 
-        } finally {
-            lock.unlock();
+                vehiculo.asignarEstacion(0);
+                vehiculo.asignarEstacionObjeto(estaciones.get(0));
+
+                System.out.println("Asignamos estacion 0 al vehiculo con id " + vehiculo.getId());
+            } else {
+
+                vehiculo.asignarEstacion(2);
+                vehiculo.asignarEstacionObjeto(estaciones.get(2));
+
+                System.out.println("Asignamos estacion 2 al vehiculo con id " + vehiculo.getId());
+            }
+        }
+
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+            lock.lock();
+            Vehiculo v = vehiculos.poll();
+
+            try {
+                if (v.getTipoDeVehiculo() == 0) {
+                    cantidadEstatales++;
+                    while (cantidadEstatales > 0)
+                        esperarEstatal.await();
+                    asignarEstacion(v);
+                    cantidadEstatales--;
+                    if (cantidadEstatales > 0) {
+
+                        esperarEstatal.signalAll();
+
+                    } else {
+                        esperarParticular.signalAll();
+
+                    }
+                } else {
+                    cantidadParticulares++;
+                    while (cantidadParticulares > 0)
+                        esperarParticular.await();
+                    asignarEstacion(v);
+                    cantidadParticulares--;
+                    if (cantidadEstatales > 0) {
+
+                        esperarEstatal.signalAll();
+
+                    } else {
+                        esperarParticular.signalAll();
+
+                    }
+
+                }
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                lock.unlock();
+            }
         }
 
     }
