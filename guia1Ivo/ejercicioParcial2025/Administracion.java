@@ -26,146 +26,20 @@ cuántas de ellas fueron aprobadas.
 A) Modelar el problema usando monitores. B) Proponer una solución (sin desarrollar) que permita mejorar el 
 número de vehículos verificados, suponiendo que cada vehículo consume el mismo tiempo durante la verificación.
 */
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Random;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class Administracion implements Runnable {
-    private List<Estacion> estaciones = new ArrayList<>(3);
-    public Lock lock;
-    private Condition esperarParticular;
-    private Condition esperarEstatal;
-    private int cantidadEstatales;
-    private int cantidadParticulares;
+    private Planta planta;
 
-    private Queue<Vehiculo> vehiculos;
+    public Administracion(Planta planta) {
 
-    private int verificaciones;
-    private int aprobadas;
-
-    public Administracion() {
-        estaciones.add(new Estacion(0, this));
-        estaciones.add(new Estacion(0, this));
-        estaciones.add(new Estacion(0, this));
-
-        this.lock = new ReentrantLock();
-        this.esperarParticular = lock.newCondition();
-        this.esperarEstatal = lock.newCondition();
-        this.cantidadEstatales = 0;
-        this.cantidadParticulares = 0;
-        this.verificaciones = 0;
-        this.aprobadas = 0;
-    }
-
-    public void incrementarVerificacion() {
-        this.verificaciones++;
-    }
-
-    public void incrementarAprobadas() {
-        this.aprobadas++;
-    }
-
-    public boolean revisionyAprobacion() {
-        Random random = new Random();
-
-        if (random.nextDouble() < 0.5) {
-            return true;
-        } else
-            return false;
-    }
-
-    public List<Estacion> getEstaciones() {
-        return this.estaciones;
-    }
-
-    public void pushearVehiculo(Vehiculo v) {
-        vehiculos.add(v);
-
-    }
-
-    public void asignarEstacion(Vehiculo vehiculo) {
-
-        System.out.println("Tomando datos y asignando estacion");
-
-        if (estaciones.get(0).getCantidadDeVehiculos() > estaciones.get(1).getCantidadDeVehiculos()) {
-            if (estaciones.get(2).getCantidadDeVehiculos() > estaciones.get(1).getCantidadDeVehiculos()) {
-
-                vehiculo.asignarEstacion(1);
-                vehiculo.asignarEstacionObjeto(estaciones.get(1));
-
-                System.out.println("Asignamos estacion 1 al vehiculo con id " + vehiculo.getId());
-            } else {
-
-                vehiculo.asignarEstacion(2);
-                vehiculo.asignarEstacionObjeto(estaciones.get(2));
-
-                System.out.println("Asignamos estacion 2 al vehiculo con id " + vehiculo.getId());
-            }
-        } else {
-            if (estaciones.get(2).getCantidadDeVehiculos() > estaciones.get(0).getCantidadDeVehiculos()) {
-
-                vehiculo.asignarEstacion(0);
-                vehiculo.asignarEstacionObjeto(estaciones.get(0));
-
-                System.out.println("Asignamos estacion 0 al vehiculo con id " + vehiculo.getId());
-            } else {
-
-                vehiculo.asignarEstacion(2);
-                vehiculo.asignarEstacionObjeto(estaciones.get(2));
-
-                System.out.println("Asignamos estacion 2 al vehiculo con id " + vehiculo.getId());
-            }
-        }
+        this.planta = planta;
 
     }
 
     @Override
     public void run() {
         while (true) {
-            lock.lock();
-            Vehiculo v = vehiculos.poll();
-
-            try {
-                if (v.getTipoDeVehiculo() == 0) {
-                    cantidadEstatales++;
-                    while (cantidadEstatales > 0)
-                        esperarEstatal.await();
-                    asignarEstacion(v);
-                    cantidadEstatales--;
-                    if (cantidadEstatales > 0) {
-
-                        esperarEstatal.signalAll();
-
-                    } else {
-                        esperarParticular.signalAll();
-
-                    }
-                } else {
-                    cantidadParticulares++;
-                    while (cantidadParticulares > 0)
-                        esperarParticular.await();
-                    asignarEstacion(v);
-                    cantidadParticulares--;
-                    if (cantidadEstatales > 0) {
-
-                        esperarEstatal.signalAll();
-
-                    } else {
-                        esperarParticular.signalAll();
-
-                    }
-
-                }
-
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } finally {
-                lock.unlock();
-            }
+            planta.asignarEstacion();
         }
 
     }

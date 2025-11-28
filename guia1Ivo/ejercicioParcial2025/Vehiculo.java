@@ -3,27 +3,19 @@ public class Vehiculo implements Runnable {
     private int tipoDeVehiculo; // 0 para estatal, 1 para particular.
     private int id;
     private int estacion;
-    private Administracion administracion;
-    private Estacion estacionObjeto;
+    private Planta planta;
 
-    public Vehiculo(int tipoDeVehiculo, int id, Administracion administracion) {
+    public Vehiculo(int tipoDeVehiculo, int id, Planta planta) {
         this.tipoDeVehiculo = tipoDeVehiculo;
         this.id = id;
-        this.administracion = administracion;
-    }
 
-    public void irAdministracion() {
-        administracion.pushearVehiculo(this);
-    }
-
-    public void irEstacionAsignada() {
-        estacionObjeto.pushearVehiculo(this);
+        this.planta = planta;
     }
 
     @Override
     public void run() {
-        irAdministracion();
-        irEstacionAsignada();
+        planta.irAdministracion(this);
+        planta.irEstacion(this, estacion);
 
     }
 
@@ -37,14 +29,6 @@ public class Vehiculo implements Runnable {
 
     public void asignarEstacion(int estacion) {
         this.estacion = estacion;
-    }
-
-    public void asignarEstacionObjeto(Estacion estacionObjeto) {
-        this.estacionObjeto = estacionObjeto;
-    }
-
-    public int getEstacion() {
-        return this.estacion;
     }
 
 }

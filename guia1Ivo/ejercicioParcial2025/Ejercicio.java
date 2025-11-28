@@ -1,8 +1,24 @@
 import java.util.Random;
 
 public class Ejercicio {
+
     public static void main(String[] args) {
-        Administracion admin = new Administracion();
+        Planta planta = new Planta();
+
+        new Thread(new Administracion(planta), "Administracion").start();
+
+        for (int i = 0; i < 3; i++) {
+
+            try {
+                Thread.sleep(tiempoRandom(0, 1000));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            new Thread(new Estacion(planta, i), "Estacion").start();
+
+        }
+
         for (Integer i = 0; i < 20; i++) {
 
             try {
@@ -11,7 +27,7 @@ public class Ejercicio {
                 e.printStackTrace();
             }
 
-            new Thread(new Vehiculo(tipoRandom(), i + 1, admin), "Vehiculo").start();
+            new Thread(new Vehiculo(tipoRandom(), i + 1, planta), "Vehiculo").start();
 
         }
     }
