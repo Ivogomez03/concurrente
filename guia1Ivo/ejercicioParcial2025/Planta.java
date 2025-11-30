@@ -75,8 +75,6 @@ public class Planta {
                 if (cantidadDeVehiculosAdminEstatales > 1)
                     esperarEstatal.await();
 
-                cantidadDeVehiculosAdminEstatales--;
-
                 vehiculo = v;
 
                 hayVehiculoQueEsperaAsignacion = true;
@@ -84,6 +82,8 @@ public class Planta {
                 noHayVehiculosEnAdmin.signal();
 
                 esperarAsignacionEstacion.await();
+
+                cantidadDeVehiculosAdminEstatales--;
 
                 if (cantidadDeVehiculosAdminEstatales > 0)
                     esperarEstatal.signal();
@@ -97,8 +97,6 @@ public class Planta {
                 if (cantidadDeVehiculosAdminPart > 1 || cantidadDeVehiculosAdminEstatales > 0)
                     esperarParticular.await();
 
-                cantidadDeVehiculosAdminPart--;
-
                 vehiculo = v;
 
                 hayVehiculoQueEsperaAsignacion = true;
@@ -106,6 +104,8 @@ public class Planta {
                 noHayVehiculosEnAdmin.signal();
 
                 esperarAsignacionEstacion.await(); // libera lock
+
+                cantidadDeVehiculosAdminPart--;
 
                 if (cantidadDeVehiculosAdminEstatales > 0)
                     esperarEstatal.signal();
@@ -153,9 +153,9 @@ public class Planta {
             vehiculo.asignarEstacion(e);
             System.out.println("Estacion asignada");
 
-            esperarAsignacionEstacion.signal();
-
             hayVehiculoQueEsperaAsignacion = false;
+
+            esperarAsignacionEstacion.signal();
 
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -189,6 +189,8 @@ public class Planta {
             if (aprobada)
                 cantAprobadas++;
 
+            hayVehiculoQueEsperaVerificacionEstacion[numeroDeEstacion] = false;
+
             esperarVerificacionEst[numeroDeEstacion].signal();
 
         } finally {
@@ -207,13 +209,15 @@ public class Planta {
                 if (cantidadDeVehiculosEstatalesEnEstacion[numeroDeEstacion] > 1)
                     esperarEstatalesEnEstacion[numeroDeEstacion].await();
 
-                cantidadDeVehiculosEstatalesEnEstacion[numeroDeEstacion]--;
-
                 System.out.println("Me van a empezar a verificar");
 
                 noHayVehiculosEstacion[numeroDeEstacion].signal();
 
+                hayVehiculoQueEsperaVerificacionEstacion[numeroDeEstacion] = true;
+
                 esperarVerificacionEst[numeroDeEstacion].await();
+
+                cantidadDeVehiculosEstatalesEnEstacion[numeroDeEstacion]--;
 
                 if (cantidadDeVehiculosEstatalesEnEstacion[numeroDeEstacion] > 0)
                     esperarEstatalesEnEstacion[numeroDeEstacion].signal();
@@ -229,13 +233,15 @@ public class Planta {
                         || cantidadDeVehiculosParticularesEnEstacion[numeroDeEstacion] > 1)
                     esperarParticularesEnEstacion[numeroDeEstacion].await();
 
-                cantidadDeVehiculosParticularesEnEstacion[numeroDeEstacion]--;
-
                 System.out.println("Me van a empezar a verificar");
 
                 noHayVehiculosEstacion[numeroDeEstacion].signal();
 
+                hayVehiculoQueEsperaVerificacionEstacion[numeroDeEstacion] = true;
+
                 esperarVerificacionEst[numeroDeEstacion].await();
+
+                cantidadDeVehiculosParticularesEnEstacion[numeroDeEstacion]--;
 
                 if (cantidadDeVehiculosEstatalesEnEstacion[numeroDeEstacion] > 0)
                     esperarEstatalesEnEstacion[numeroDeEstacion].signal();
