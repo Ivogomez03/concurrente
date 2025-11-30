@@ -55,6 +55,8 @@ public class Auditorio {
 
             cantidadDePersonasEnAuditorio--;
 
+            esperarSiguienteCharla.signalAll();
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
@@ -92,7 +94,6 @@ public class Auditorio {
             if (cantidadDePersonasEnAuditorio > 0) {
                 esperarQueTermineCharla.signalAll();
                 laCharlaYaHaComenzado = false;
-                esperarSiguienteCharla.signalAll();
             }
 
         } finally {

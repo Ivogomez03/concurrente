@@ -31,18 +31,16 @@ public class Juego {
 
     private String acertijo;
 
-    private Condition esperarParticipantes;
+    private Condition noPuedoVolverApostar;
 
     private boolean acertijoFinalizo = false;
-
-    private boolean participanteApostando = false;
 
     public Juego(String acertijo) {
         this.lock = new ReentrantLock();
 
         this.acertijo = acertijo;
 
-        this.esperarParticipantes = lock.newCondition();
+        this.noPuedoVolverApostar = lock.newCondition();
     }
 
     public boolean concluido() {
@@ -56,22 +54,17 @@ public class Juego {
             if (acertijoFinalizo)
                 return false;
 
-            while (participanteApostando) {
-                esperarParticipantes.await();
-            }
-            participanteApostando = true;
             System.out.println("Participante " + id + " apostando, palabra elegida: " + palabra + ".");
 
             if (acertijo.equals(palabra)) {
                 System.out.println("Participante " + id + " ha ganado, monto ganado: " + monto * 10);
                 acertijoFinalizo = true;
-                participanteApostando = false;
+                noPuedoVolverApostar.signalAll();
                 return true;
 
             }
-
-            participanteApostando = false;
-            esperarParticipantes.signalAll();
+            noPuedoVolverApostar.signalAll();
+            noPuedoVolverApostar.await();
             return false;
 
         } catch (InterruptedException e) {
