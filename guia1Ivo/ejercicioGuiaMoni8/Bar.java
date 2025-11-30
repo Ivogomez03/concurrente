@@ -61,7 +61,7 @@ public class Bar {
                 cantidadDePizzasPequeñasEnBarra++;
             }
 
-            if (cantidadDePizzasGrandesEnBarra + cantidadDePizzasPequeñasEnBarra > 0) {
+            if (cantidadDePizzasGrandesEnBarra > 0 || cantidadDePizzasPequeñasEnBarra > 1) {
                 noHayPizzas.signalAll();
             }
 
