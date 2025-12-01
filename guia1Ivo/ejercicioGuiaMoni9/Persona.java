@@ -1,23 +1,19 @@
 package ejercicioGuiaMoni9;
 
 public class Persona implements Runnable {
-    private Integer id;
-    private Integer costa; // costa 0 o costa 1
-    private Viaje viaje;
+    private Rio rio;
+    private int costa;
+    private int id;
 
-    public Persona(Integer id, Integer costa, Viaje viaje) {
+    public Persona(Rio rio, int costa, int id) {
         this.id = id;
         this.costa = costa;
-        this.viaje = viaje;
+        this.rio = rio;
     }
 
     @Override
     public void run() {
-        try {
-            viaje.subir(costa, id);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        rio.abordarBote(costa, id);
 
     }
 

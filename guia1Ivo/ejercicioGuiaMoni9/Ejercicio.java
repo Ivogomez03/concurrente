@@ -6,9 +6,11 @@ class Ejercicio {
     public static void main(String[] args) {
         int N = 10;
 
-        Viaje viaje = new Viaje(N);
+        Rio rio = new Rio(N);
 
-        for (Integer i = 0; i < 80; i++) {
+        new Thread(new Bote(rio), "Bote").start();
+
+        for (int i = 0; i < 100; i++) {
 
             try {
                 Thread.sleep(tiempoRandom(0, 1000));
@@ -16,7 +18,7 @@ class Ejercicio {
                 e.printStackTrace();
             }
 
-            new Thread(new Persona(i + 1, costaRandom(), viaje), "Persona").start();
+            new Thread(new Persona(rio, costaRandom(), i + 1), "Persona").start();
 
         }
     }
