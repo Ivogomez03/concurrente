@@ -84,11 +84,13 @@ class Edificio {
         try {
             System.out.println("Esperando a que suban personas en piso: " + pisoAscensor);
 
-            while (personasEnAscensor < capacidad || !timeout) {
+            while (personasEnAscensor < capacidad && !timeout) {
                 estaLleno.await();
             }
 
             System.out.println("Ascensor en piso " + pisoAscensor + " cambiando a " + (1 - pisoAscensor));
+
+            ascensorEnPiso[pisoAscensor] = false;
 
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -109,7 +111,7 @@ class Edificio {
     public void bajarPersonas() {
         lock.lock();
         try {
-            ascensorEnPiso[pisoAscensor] = false;
+
             pisoAscensor = 1 - pisoAscensor;
 
             System.out.println("Ascensor esperando a que bajen personas en piso " + pisoAscensor);
