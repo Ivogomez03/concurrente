@@ -211,9 +211,9 @@ public class Planta {
 
                 System.out.println("Me van a empezar a verificar");
 
-                noHayVehiculosEstacion[numeroDeEstacion].signal();
-
                 hayVehiculoQueEsperaVerificacionEstacion[numeroDeEstacion] = true;
+
+                noHayVehiculosEstacion[numeroDeEstacion].signal();
 
                 esperarVerificacionEst[numeroDeEstacion].await();
 
