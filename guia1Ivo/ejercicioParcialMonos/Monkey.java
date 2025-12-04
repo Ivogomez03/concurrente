@@ -1,27 +1,25 @@
 package ejercicioParcialMonos;
 
 public class Monkey implements Runnable {
-    private Integer id;
-    private String destino;
-    private Ravine ravine;
+    private Cuerda cuerda;
+    private int id;
+    private int destino;
 
-    public Monkey(Integer id, String destino, Ravine ravine) {
+    public Monkey(Cuerda cuerda, int id, int destino) {
+        this.cuerda = cuerda;
         this.id = id;
         this.destino = destino;
-        this.ravine = ravine;
     }
 
     @Override
     public void run() {
-        ravine.WaitUntilSafeToCross(destino, id);
-        ravine.CrossRavine(id, destino);
+        cuerda.cruzarCuerda(destino, id);
         try {
-            Thread.sleep(Ejercicio.tiempoRandom(1000, 3000));
+            Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        ravine.DoneWithCrossing(destino, id);
-
+        cuerda.llegarAdestino(destino, id);
     }
 
 }

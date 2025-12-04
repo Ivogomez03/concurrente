@@ -1,18 +1,16 @@
-package ejercicioParcialAutobus;
-
 public class Pasajero implements Runnable {
 
-    private Integer id;
-    private Estacion estacion;
+    private EstacionAutobus estacion;
+    private int id;
 
-    public Pasajero(Integer id, Estacion estacion) {
+    public Pasajero(EstacionAutobus estacion, int id) {
         this.id = id;
         this.estacion = estacion;
     }
 
     @Override
     public void run() {
-        estacion.solicitarSubirse(id);
+        estacion.subirAlAutobus(id);
 
     }
 

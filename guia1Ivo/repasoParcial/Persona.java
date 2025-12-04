@@ -2,20 +2,21 @@ package repasoParcial;
 
 class Persona implements Runnable {
 
-    private String nombre;
-    private String piso;
-    private Ascensor ascensor;
+    private int id;
+    private int piso; //
+    private Edificio edificio;
 
-    public Persona(String nombre, Ascensor ascensor, String piso) {
-        this.nombre = nombre;
-        this.ascensor = ascensor;
+    public Persona(int id, int piso, Edificio edificio) {
+        this.edificio = edificio;
+        this.id = id;
         this.piso = piso;
 
     }
 
     @Override
     public void run() {
-        ascensor.subirse(piso, nombre);
-        ascensor.bajarse(nombre);
+        edificio.subir(piso, id);
+
     }
+
 }

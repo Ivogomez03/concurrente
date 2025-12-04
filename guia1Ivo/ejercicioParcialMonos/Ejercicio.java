@@ -15,9 +15,9 @@ import java.util.Random;
 
 public class Ejercicio {
     public static void main(String[] args) {
-        Ravine ravine = new Ravine();
+        Cuerda cuerda = new Cuerda();
 
-        for (Integer i = 0; i < 20; i++) {
+        for (int i = 0; i < 40; i++) {
 
             try {
                 Thread.sleep(tiempoRandom(0, 1000));
@@ -25,18 +25,18 @@ public class Ejercicio {
                 e.printStackTrace();
             }
 
-            new Thread(new Monkey(i + 1, sentidoRandom(), ravine), "Monkey").start();
+            new Thread(new Monkey(cuerda, i + 1, sentidoRandom()), "Monkey").start();
 
         }
     }
 
-    private static String sentidoRandom() {
+    private static int sentidoRandom() {
         Random random = new Random();
 
         if (random.nextDouble() < 0.5) {
-            return "Oeste";
+            return 0;
         } else
-            return "Este";
+            return 1;
     }
 
     public static Integer tiempoRandom(int min, int max) {
