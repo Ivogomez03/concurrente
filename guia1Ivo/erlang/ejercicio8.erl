@@ -7,13 +7,13 @@
 % bufer.
 % a) Implemente el modulo buffer Erlang para proporcionar la funcionalidad descrita anteriormente.
 -module(ejercicio8).
--export([func/4,start/1, obtener/1, poner/2,stop/1]).
+-export([func/4,start/1, obtener/1, poner/2]).
 -include_lib("eunit/include/eunit.hrl").
 
 
 start(N) ->
     spawn(ejercicio8,func,[[],N,[],0]).
-stop(Pid) -> Pid ! stop.
+
 obtener(Serv) -> 
     Serv ! {obtener,self()},
     receive
