@@ -18,18 +18,23 @@ obtener(Serv) ->
     Serv ! {obtener,self()},
     receive
         {ok,Elemento} -> Elemento
+    after 500
+        -> timeout
+    
     end.
 poner(Serv,X) ->
     Serv ! {poner,self(),X},
     receive
         ok -> ok
+    after 500
+        -> timeout
     end.
 func(Serv,N,Cola,LongBuffer) -> 
     receive
         {obtener,From} ->
             if
                 LongBuffer == 0 ->
-                    func(Serv,N,lists:append(Cola,[{obtener,From}]),LongBuffer);
+                    func(Serv,N,Cola ++ [{obtener,From}],LongBuffer);
                 true -> 
                     [Elemento | Resto] = Serv,
                     LongBufferActualizado = LongBuffer - 1,
@@ -48,7 +53,7 @@ func(Serv,N,Cola,LongBuffer) ->
                     io:format("Buffer Actual ~p.~n",[NewBuffer]),
                     procesar_cola(NewBuffer, N, Cola,LongBufferActualizado);
                 LongBuffer >= N ->
-                    func(Serv,N,lists:append(Cola,[{poner,From,X}]),LongBuffer)
+                    func(Serv,N,Cola ++ [{poner,From,X}],LongBuffer)
             end
         end.
 
@@ -82,26 +87,68 @@ procesar_cola(Serv,N,Cola,LongBuffer) ->
         end.
 
 
-buffer_test_() ->
-  {setup,
-     fun() ->
-         P = ejercicio8:start(2),
-         register(buf, P),
-         P
-     end,
-     fun ejercicio8:stop/1,
-     [
-       ?_assertEqual(ok, ejercicio8:poner(buf, 1)),
-       ?_assertEqual(ok, ejercicio8:poner(buf, 2)),
-       ?_assertEqual(1, ejercicio8:obtener(buf)),
-       ?_assertEqual(2, ejercicio8:obtener(buf)),
-       ?_assertEqual(ok, ejercicio8:poner(buf, 3)),
-       ?_assertEqual(3, ejercicio8:obtener(buf))
-     ]
-  }.
+%TEST 1 - Poner elemento exitoso
+t1_test() ->
+    Buffer = ejercicio8:start(2),
+    ?_assertEqual(ok, ejercicio8:poner(Buffer, 1)).
+    
+%TEST 2 - Poner y obtener elemento exitoso
+t2_test() ->
+    Buffer = ejercicio8:start(2),
+    ?_assertEqual(ok, ejercicio8:poner(Buffer, 1)),
+    ?_assertEqual(1, ejercicio8:obtener(Buffer)).
+
+%TEST 3 - Obtener elemento fallido, buffer no tiene elementos
+t3_test() ->
+    Buffer = ejercicio8:start(2),
+    ?_assertEqual(timeout, ejercicio8:obtener(Buffer)).
+
+%TEST 4 - Obtener elemento fallido, buffer no tiene elementos, pero hacemos un poner y procesamos cola
+t4_test() ->
+    Buffer = ejercicio8:start(2),
+    MiPid = self(),
+
+    
+    spawn ( fun() ->
+            Elemento = ejercicio8:obtener(Buffer),
+            %hasta aca esta bloqueado porque no hay elementos
+            MiPid ! {resultado, Elemento}
+            end
+        ),
+
+    timer:sleep(50),
+    ejercicio8:poner(Buffer,1),
+    receive     
+        {resultado, Elem} ->
+            ?assertEqual(1,Elem)
+    end.
+    
 
 
+%TEST 5 - Poner elemento fallido, buffer lleno
+t5_test() ->
+    Buffer = ejercicio8:start(1),
+    ?_assertEqual(ok, ejercicio8:poner(Buffer, 1)),
+    ?_assertEqual(timeout, ejercicio8:poner(Buffer,2)).
 
+%TEST 6 - Poner elemento fallido, buffer lleno, pero hacemos un obtener y procesamos cola
+t6_test() ->
+    Buffer = ejercicio8:start(1),
+    MiPid = self(),
+    ?_assertEqual(ok, ejercicio8:poner(Buffer, 1)),
+    
+    spawn ( fun() ->
+            Elemento = ejercicio8:poner(Buffer,2),
+            %hasta aca esta bloqueado porque no hay elementos
+            MiPid ! {resultado, 2}
+            end
+        ),
 
-
+    timer:sleep(50),
+    ejercicio8:obtener(Buffer),
+    receive     
+        {resultado, Elem} ->
+            ?assertEqual(2,Elem)
+    end.
+    
 
